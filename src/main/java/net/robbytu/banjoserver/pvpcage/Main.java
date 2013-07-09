@@ -57,7 +57,10 @@ public class Main extends JavaPlugin {
             this.getConfig().set("cage." + sel.getWorld().getName() + "." + args[1] + ".max.z", sel.getMaximumPoint().getZ());
 
             this.saveConfig();
+
+            sender.sendMessage(ChatColor.GREEN + "Succesfully created cage.");
         }
+
 
         return true;
     }
