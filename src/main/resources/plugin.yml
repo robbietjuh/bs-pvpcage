@@ -1,3 +1,9 @@
 name: bs-pvpcage
 main: net.robbytu.banjoserver.pvpcage.Main
 version: ${version}
+depends: [Vault, WorldEdit]
+commands:
+  pvpcage:
+    description: bs-pvpcages config management
+    permission:
+    usage: /pvpcages [<create/remove/info> <name>/<require/prohibit> <name> <add/remove> <item>]
