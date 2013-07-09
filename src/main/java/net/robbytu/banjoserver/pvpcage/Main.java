@@ -12,14 +12,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class Main extends JavaPlugin {
-    static Main plugin;
     static WorldEditPlugin WE;
     static Permission permission = null;
 
     @Override
     public void onEnable() {
-        this.plugin = this;
-        this.WE = this.getWorldEdit();
+        WE = this.getWorldEdit();
 
         if(WE == null) {
             getLogger().warning("You must have WorldEdit installed for this plugin to work.");
@@ -43,7 +41,7 @@ public class Main extends JavaPlugin {
             if(!permission.has(sender, "pvpcage.create")) return this.failCommand(sender, cmd, "Insufficient permissions");
             if(args.length == 1) return this.failCommand(sender, cmd, "You must specify a name for the new cage.");
 
-            Selection sel = this.WE.getSelection((Player)sender);
+            Selection sel = WE.getSelection((Player)sender);
             if(sel == null) return this.failCommand(sender, cmd, "You must select a region using WorldEdit before creating a cage.");
 
             if(getConfig().contains("cage." + sel.getWorld().getName() + "." + args[1])) return this.failCommand(sender, cmd, "This name is already in use by another cage.");
