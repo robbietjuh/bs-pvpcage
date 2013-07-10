@@ -3,9 +3,11 @@ package net.robbytu.banjoserver.pvpcage;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +19,7 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Main extends JavaPlugin implements Listener {
     static WorldEditPlugin WE;
@@ -171,6 +174,31 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
+        if(!permission.has(event.getPlayer(), "pvpcage.bypass")) {
+            try {
+                String world = event.getPlayer().getWorld().getName();
+                Location player_loc = event.getPlayer().getLocation();
+
+                Set<String> regions = ((MemorySection)getConfig().get("cage." + world)).getKeys(false);
+
+                for(String region : regions) {
+                    double max_x = getConfig().getDouble("cage." + world + "." + region + ".max.x");
+                    double max_y = getConfig().getDouble("cage." + world + "." + region + ".max.y");
+                    double max_z = getConfig().getDouble("cage." + world + "." + region + ".max.z");
+
+                    double min_x = getConfig().getDouble("cage." + world + "." + region + ".min.x");
+                    double min_y = getConfig().getDouble("cage." + world + "." + region + ".min.y");
+                    double min_z = getConfig().getDouble("cage." + world + "." + region + ".min.z");
+
+                    if(player_loc.getX() >= min_x && player_loc.getX() < max_x
+                            && player_loc.getY() >= min_y && player_loc.getY() < max_y
+                            && player_loc.getZ() >= min_z && player_loc.getZ() < max_z) {
+                        // Player is in the cage
+                    }
+                }
+            }
+            catch(Exception ex) {}
+        }
 
     }
 
