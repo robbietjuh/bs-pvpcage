@@ -57,6 +57,7 @@ public class Main extends JavaPlugin {
             this.saveConfig();
 
             sender.sendMessage(ChatColor.GREEN + "Succesfully created cage.");
+            return true;
         }
 
         if(args.length > 0 && args[0].equalsIgnoreCase("remove")) {
@@ -69,6 +70,7 @@ public class Main extends JavaPlugin {
             this.saveConfig();
 
             sender.sendMessage(ChatColor.GREEN + "Succesfully removed cage.");
+            return true;
         }
 
 
