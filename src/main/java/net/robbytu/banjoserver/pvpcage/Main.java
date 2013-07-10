@@ -103,7 +103,37 @@ public class Main extends JavaPlugin {
 
             this.saveConfig();
 
-            sender.sendMessage(ChatColor.GREEN + "Succesfully removed requirement.");
+            sender.sendMessage(ChatColor.GREEN + "Succesfully " + args[1] + "d requirement.");
+            return true;
+        }
+
+        if(args.length > 0 && args[0].equalsIgnoreCase("prohibit")) {
+            if(!permission.has(sender, "pvpcage.prohibit")) return this.failCommand(sender, cmd, "Insufficient permissions.");
+
+            if(args.length == 1) return this.failCommand(sender, cmd, "Missing argument: You must specify wether to <add> or <remove> a prohibitation.");
+            if(args.length == 2) return this.failCommand(sender, cmd, "Missing argument: You must specify the name of the cage to apply new settings to.");
+            if(args.length == 3) return this.failCommand(sender, cmd, "Missing argument: You must specify an item to apply.");
+
+            if(!args[1].equalsIgnoreCase("add") || !args[1].equalsIgnoreCase("remove")) return this.failCommand(sender, cmd, "Invalid argument: You must specify wether to <add> or <remove> a prohibitation.");
+            if(!getConfig().contains("cage." + ((Player)sender).getWorld().getName() + "." + args[2])) return this.failCommand(sender, cmd, "Invalid argument: No such cage found.");
+
+            Material mat;
+            if(this.isInteger(args[2])) mat = Material.getMaterial(Integer.getInteger(args[2]));
+            else mat = Material.getMaterial(args[2]);
+
+            if(mat == null) return this.failCommand(sender, cmd, "Invalid argument: No such Material found (" + args[2] + ").");
+
+            List<Integer> prohibitations = this.getConfig().getIntegerList("cage." + ((Player)sender).getWorld().getName() + "." + args[2] + ".prohibited");
+            if(prohibitations == null) prohibitations = new ArrayList<Integer>();
+
+            if(args[1].equalsIgnoreCase("add")) if(!prohibitations.contains(mat.getId())) prohibitations.add(mat.getId());
+            if(args[1].equalsIgnoreCase("remove")) if(prohibitations.contains(mat.getId())) prohibitations.remove(mat.getId());
+
+            this.getConfig().set("cage." + ((Player)sender).getWorld().getName() + "." + args[2] + ".prohibited", prohibitations);
+
+            this.saveConfig();
+
+            sender.sendMessage(ChatColor.GREEN + "Succesfully " + args[1] + "d prohibitation.");
             return true;
         }
 
