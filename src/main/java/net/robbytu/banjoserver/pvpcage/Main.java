@@ -13,7 +13,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Main extends JavaPlugin {
@@ -97,8 +96,8 @@ public class Main extends JavaPlugin {
             List<Integer> requirements = this.getConfig().getIntegerList("cage." + ((Player)sender).getWorld().getName() + "." + args[2] + ".requirements");
             if(requirements == null) requirements = new ArrayList<Integer>();
 
-            if(args[1] == "add") if(!requirements.contains(mat.getId())) requirements.add(mat.getId());
-            if(args[1] == "remove") if(requirements.contains(mat.getId())) requirements.remove(mat.getId());
+            if(args[1].equalsIgnoreCase("add")) if(!requirements.contains(mat.getId())) requirements.add(mat.getId());
+            if(args[1].equalsIgnoreCase("remove")) if(requirements.contains(mat.getId())) requirements.remove(mat.getId());
 
             this.getConfig().set("cage." + ((Player)sender).getWorld().getName() + "." + args[2] + ".requirements", requirements);
 
