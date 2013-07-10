@@ -137,6 +137,28 @@ public class Main extends JavaPlugin {
             return true;
         }
 
+        if(args.length > 0 && args[0].equalsIgnoreCase("info")) {
+            if(!permission.has(sender, "pvpcage.info")) return this.failCommand(sender, cmd, "Insufficient permissions.");
+
+            if(args.length == 1) return this.failCommand(sender, cmd, "Missing argument: You must specify the name of the cage to fetch info from.");
+
+            List<Integer> requirements = this.getConfig().getIntegerList("cage." + ((Player)sender).getWorld().getName() + "." + args[1] + ".requirements");
+            if(requirements != null) {
+                sender.sendMessage(ChatColor.AQUA + "Required items for " + args[1] + ":");
+                for(int i : requirements) sender.sendMessage(ChatColor.AQUA + " - " + ChatColor.GRAY + Material.getMaterial(i).name());
+                sender.sendMessage(" ");
+            }
+
+            List<Integer> prohibitations = this.getConfig().getIntegerList("cage." + ((Player)sender).getWorld().getName() + "." + args[1] + ".prohibited");
+            if(prohibitations != null) {
+                sender.sendMessage(ChatColor.AQUA + "Prohibited items for " + args[1] + ":");
+                for(int i : prohibitations) sender.sendMessage(ChatColor.AQUA + " - " + ChatColor.GRAY + Material.getMaterial(i).name());
+                sender.sendMessage(" ");
+            }
+
+            if(requirements == null && prohibitations == null) sender.sendMessage(ChatColor.GRAY + "No required nor prohibited items configured for " + args[1]);
+        }
+
         return true;
     }
 
