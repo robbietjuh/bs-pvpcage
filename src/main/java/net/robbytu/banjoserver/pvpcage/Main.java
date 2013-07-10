@@ -157,9 +157,11 @@ public class Main extends JavaPlugin {
             }
 
             if(requirements == null && prohibitations == null) sender.sendMessage(ChatColor.GRAY + "No required nor prohibited items configured for " + args[1]);
+
+            return true;
         }
 
-        return true;
+        return this.failCommand(sender, cmd, "No such method or missing arguments.");
     }
 
     private boolean failCommand(CommandSender sender, Command cmd, String error) {
