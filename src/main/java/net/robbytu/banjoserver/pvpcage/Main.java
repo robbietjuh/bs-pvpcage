@@ -59,6 +59,18 @@ public class Main extends JavaPlugin {
             sender.sendMessage(ChatColor.GREEN + "Succesfully created cage.");
         }
 
+        if(args.length > 0 && args[0].equalsIgnoreCase("remove")) {
+            if(!permission.has(sender, "pvpcage.remove")) return this.failCommand(sender, cmd, "Insufficient permissions");
+            if(args.length == 1) return this.failCommand(sender, cmd, "You must specify the name of the cage to be removed.");
+            if(!getConfig().contains("cage." + ((Player)sender).getWorld().getName() + "." + args[1])) return this.failCommand(sender, cmd, "No such cage found.");
+
+            this.getConfig().set("cage" + ((Player)sender).getWorld().getName() + "." + args[1], null);
+
+            this.saveConfig();
+
+            sender.sendMessage(ChatColor.GREEN + "Succesfully removed cage.");
+        }
+
 
         return true;
     }
