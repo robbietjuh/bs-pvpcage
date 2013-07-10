@@ -92,14 +92,14 @@ public class Main extends JavaPlugin implements Listener {
             if(args.length == 2) return this.failCommand(sender, cmd, "Missing argument: You must specify the name of the cage to apply new settings to.");
             if(args.length == 3) return this.failCommand(sender, cmd, "Missing argument: You must specify an item to apply.");
 
-            if(!args[1].equalsIgnoreCase("add") || !args[1].equalsIgnoreCase("remove")) return this.failCommand(sender, cmd, "Invalid argument: You must specify wether to <add> or <remove> a requirement.");
+            if(!args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("remove")) return this.failCommand(sender, cmd, "Invalid argument: You must specify wether to <add> or <remove> a requirement.");
             if(!getConfig().contains("cage." + ((Player)sender).getWorld().getName() + "." + args[2])) return this.failCommand(sender, cmd, "Invalid argument: No such cage found.");
 
             Material mat;
-            if(this.isInteger(args[2])) mat = Material.getMaterial(Integer.getInteger(args[2]));
-            else mat = Material.getMaterial(args[2]);
+            if(this.isInteger(args[3])) mat = Material.getMaterial(Integer.getInteger(args[3]));
+            else mat = Material.getMaterial(args[3]);
 
-            if(mat == null) return this.failCommand(sender, cmd, "Invalid argument: No such Material found (" + args[2] + ").");
+            if(mat == null) return this.failCommand(sender, cmd, "Invalid argument: No such Material found (" + args[3] + ").");
 
             List<Integer> requirements = this.getConfig().getIntegerList("cage." + ((Player)sender).getWorld().getName() + "." + args[2] + ".requirements");
             if(requirements == null) requirements = new ArrayList<Integer>();
@@ -111,7 +111,7 @@ public class Main extends JavaPlugin implements Listener {
 
             this.saveConfig();
 
-            sender.sendMessage(ChatColor.GREEN + "Succesfully " + args[1] + "d requirement.");
+            sender.sendMessage(ChatColor.GREEN + "Succesfully " + args[1] + "ed requirement.");
             return true;
         }
 
@@ -122,14 +122,14 @@ public class Main extends JavaPlugin implements Listener {
             if(args.length == 2) return this.failCommand(sender, cmd, "Missing argument: You must specify the name of the cage to apply new settings to.");
             if(args.length == 3) return this.failCommand(sender, cmd, "Missing argument: You must specify an item to apply.");
 
-            if(!args[1].equalsIgnoreCase("add") || !args[1].equalsIgnoreCase("remove")) return this.failCommand(sender, cmd, "Invalid argument: You must specify wether to <add> or <remove> a prohibitation.");
+            if(!args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("remove")) return this.failCommand(sender, cmd, "Invalid argument: You must specify wether to <add> or <remove> a prohibitation.");
             if(!getConfig().contains("cage." + ((Player)sender).getWorld().getName() + "." + args[2])) return this.failCommand(sender, cmd, "Invalid argument: No such cage found.");
 
             Material mat;
-            if(this.isInteger(args[2])) mat = Material.getMaterial(Integer.getInteger(args[2]));
-            else mat = Material.getMaterial(args[2]);
+            if(this.isInteger(args[3])) mat = Material.getMaterial(Integer.getInteger(args[3]));
+            else mat = Material.getMaterial(args[3]);
 
-            if(mat == null) return this.failCommand(sender, cmd, "Invalid argument: No such Material found (" + args[2] + ").");
+            if(mat == null) return this.failCommand(sender, cmd, "Invalid argument: No such Material found (" + args[3] + ").");
 
             List<Integer> prohibitations = this.getConfig().getIntegerList("cage." + ((Player)sender).getWorld().getName() + "." + args[2] + ".prohibited");
             if(prohibitations == null) prohibitations = new ArrayList<Integer>();
@@ -141,7 +141,7 @@ public class Main extends JavaPlugin implements Listener {
 
             this.saveConfig();
 
-            sender.sendMessage(ChatColor.GREEN + "Succesfully " + args[1] + "d prohibitation.");
+            sender.sendMessage(ChatColor.GREEN + "Succesfully " + args[1] + "ed prohibitation.");
             return true;
         }
 
@@ -149,6 +149,8 @@ public class Main extends JavaPlugin implements Listener {
             if(!permission.has(sender, "pvpcage.info")) return this.failCommand(sender, cmd, "Insufficient permissions.");
 
             if(args.length == 1) return this.failCommand(sender, cmd, "Missing argument: You must specify the name of the cage to fetch info from.");
+
+            if(!getConfig().contains("cage." + ((Player)sender).getWorld().getName() + "." + args[1])) return this.failCommand(sender, cmd, "Invalid argument: No such cage found.");
 
             List<Integer> requirements = this.getConfig().getIntegerList("cage." + ((Player)sender).getWorld().getName() + "." + args[1] + ".requirements");
             if(requirements != null) {
@@ -193,7 +195,26 @@ public class Main extends JavaPlugin implements Listener {
                     if(player_loc.getX() >= min_x && player_loc.getX() < max_x
                             && player_loc.getY() >= min_y && player_loc.getY() < max_y
                             && player_loc.getZ() >= min_z && player_loc.getZ() < max_z) {
-                        // Player is in the cage
+                        List<Integer> prohibitations = this.getConfig().getIntegerList("cage." + world + "." + region + ".prohibited");
+                        List<Integer> requirements = this.getConfig().getIntegerList("cage." + world + "." + region + ".requirements");
+
+                        for(int i : prohibitations) {
+                            Material mat = Material.getMaterial(i);
+                            if(event.getPlayer().getInventory().contains(mat)) {
+                                event.setCancelled(true);
+                                event.getPlayer().sendMessage(ChatColor.RED + "Je hebt geen toegang dit gebied omdat je dit item in je inventory hebt: " + mat.name());
+                                return;
+                            }
+                        }
+
+                        for(int i : requirements) {
+                            Material mat = Material.getMaterial(i);
+                            if(!event.getPlayer().getInventory().contains(mat)) {
+                                event.setCancelled(true);
+                                event.getPlayer().sendMessage(ChatColor.RED + "Om dit gebied binnen te gaan ben je dit item in je inventory nodig: " + mat.name());
+                                return;
+                            }
+                        }
                     }
                 }
             }

@@ -4,6 +4,6 @@ version: ${version}
 depends: [Vault, WorldEdit]
 commands:
   pvpcage:
-    description: bs-pvpcages config management
+    description: bs-pvpcage config management
     permission:
-    usage: /pvpcages [<create/remove/info> <name>/<require/prohibit> <name> <add/remove> <item>]
+    usage: /pvpcage [<create/remove/info> <name>/<require/prohibit> <add/remove> <name> <item>]
