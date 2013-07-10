@@ -202,7 +202,7 @@ public class Main extends JavaPlugin implements Listener {
                             Material mat = Material.getMaterial(i);
                             if(event.getPlayer().getInventory().contains(mat)) {
                                 event.setCancelled(true);
-                                event.getPlayer().sendMessage(ChatColor.RED + "Je hebt geen toegang dit gebied omdat je dit item in je inventory hebt: " + mat.name());
+                                event.getPlayer().sendMessage(ChatColor.RED + "Je hebt geen toegang tot dit gebied omdat je dit item in je inventory hebt: " + mat.name());
                                 return;
                             }
                         }
