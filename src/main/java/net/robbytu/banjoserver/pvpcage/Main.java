@@ -96,7 +96,7 @@ public class Main extends JavaPlugin implements Listener {
             if(!getConfig().contains("cage." + ((Player)sender).getWorld().getName() + "." + args[2])) return this.failCommand(sender, cmd, "Invalid argument: No such cage found.");
 
             Material mat;
-            if(this.isInteger(args[3])) mat = Material.getMaterial(Integer.getInteger(args[3]));
+            if(this.isInteger(args[3])) mat = Material.getMaterial(Integer.parseInt(args[3]));
             else mat = Material.getMaterial(args[3]);
 
             if(mat == null) return this.failCommand(sender, cmd, "Invalid argument: No such Material found (" + args[3] + ").");
@@ -126,7 +126,7 @@ public class Main extends JavaPlugin implements Listener {
             if(!getConfig().contains("cage." + ((Player)sender).getWorld().getName() + "." + args[2])) return this.failCommand(sender, cmd, "Invalid argument: No such cage found.");
 
             Material mat;
-            if(this.isInteger(args[3])) mat = Material.getMaterial(Integer.getInteger(args[3]));
+            if(this.isInteger(args[3])) mat = Material.getMaterial(Integer.parseInt(args[3]));
             else mat = Material.getMaterial(args[3]);
 
             if(mat == null) return this.failCommand(sender, cmd, "Invalid argument: No such Material found (" + args[3] + ").");
