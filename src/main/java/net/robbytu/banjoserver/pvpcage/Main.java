@@ -135,7 +135,7 @@ public class Main extends JavaPlugin implements Listener {
             if(prohibitations == null) prohibitations = new ArrayList<Integer>();
 
             if(args[1].equalsIgnoreCase("add")) if(!prohibitations.contains(mat.getId())) prohibitations.add(mat.getId());
-            if(args[1].equalsIgnoreCase("remove")) if(prohibitations.contains(mat.getId())) prohibitations.remove(mat.getId());
+            if(args[1].equalsIgnoreCase("remove")) if(prohibitations.contains(mat.getId())) prohibitations.remove(prohibitations.indexOf(mat.getId()));
 
             this.getConfig().set("cage." + ((Player)sender).getWorld().getName() + "." + args[2] + ".prohibited", prohibitations);
 
@@ -201,8 +201,8 @@ public class Main extends JavaPlugin implements Listener {
                         for(int i : prohibitations) {
                             Material mat = Material.getMaterial(i);
                             if(event.getPlayer().getInventory().contains(mat)) {
-                                event.setCancelled(true);
                                 event.getPlayer().sendMessage(ChatColor.RED + "Je hebt geen toegang tot dit gebied omdat je dit item in je inventory hebt: " + mat.name());
+                                event.getPlayer().setVelocity(player_loc.getDirection().multiply(-1));
                                 return;
                             }
                         }
@@ -210,8 +210,8 @@ public class Main extends JavaPlugin implements Listener {
                         for(int i : requirements) {
                             Material mat = Material.getMaterial(i);
                             if(!event.getPlayer().getInventory().contains(mat)) {
-                                event.setCancelled(true);
                                 event.getPlayer().sendMessage(ChatColor.RED + "Om dit gebied binnen te gaan ben je dit item in je inventory nodig: " + mat.name());
+                                event.getPlayer().setVelocity(player_loc.getDirection().multiply(-1));
                                 return;
                             }
                         }
